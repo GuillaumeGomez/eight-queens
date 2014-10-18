@@ -1,7 +1,7 @@
 eight-queens
 ============
 
-A brute-force program on the eight-queens problem.
+A brute-force program on the [eight-queens problem](http://en.wikipedia.org/wiki/Eight_queens_puzzle).
 
 ```Shell
 > make
