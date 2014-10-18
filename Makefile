@@ -18,10 +18,19 @@
 #
 # 3. This notice may not be removed or altered from any source distribution.
 
+OPTIONS=	-g2
+
+EXEC_NAME=	eight_queens
+
+FILES=		src/eight_queens.c \
+		src/list.c \
+		src/utils.c \
+		src/print.c
+
 eight-queens:
-	gcc -g2 src/eight_queens.c -o eight-queens
+	gcc $(OPTIONS) $(FILES) -o $(EXEC_NAME)
 
 clean:
-	rm eight-queens
+	rm $(EXEC_NAME)
 
 re: clean eight-queens

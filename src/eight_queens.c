@@ -22,89 +22,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-
-typedef struct solution {
-  char solution[8][8];
-  struct solution *next;
-} solution;
-
-void print_board(char board[8][8], int possibility) {
-  int i;
-
-  printf("Possibility number: %d\n", possibility);
-  for (i = 0; i < 8; ++i) {
-    int j;
-
-    printf("------------------\n");
-    for (j = 0; j < 8; ++j) {
-      if (board[i][j] < 10) {
-	printf("|%d", board[i][j]);
-      } else {
-      	printf("| ");
-      }
-    }
-    printf("|\n");
-  }
-  printf("------------------\n");
-}
-
-int compare_boards(char board1[8][8], char board2[8][8]) {
-  int i = 0;
-
-  for (; i < 8; ++i) {
-    int j = 0;
-
-    for (; j < 8; ++j) {
-      if (board1[i][j] < 10 && (board2[i][j] == 0 || board2[i][j] > 10))
-	return 0;
-      if (board2[i][j] < 10 && (board1[i][j] == 0 || board1[i][j] > 10))
-	return 0;
-    }
-  }
-  return 1;
-}
-
-void copy_solution(solution *n, char board[8][8]) {
-  int i;
-
-  if (!n)
-    return;
-  for (i = 0; i < 8; ++i) {
-    int j;
-
-    for (j = 0; j < 8; ++j) {
-      n->solution[i][j] = board[i][j];
-    }
-  }
-}
-
-int add_solution(char board[8][8], solution **head) {
-  if (*head) {
-    solution *n;
-    solution *tmp = *head;
-
-    while (tmp) {
-      if (compare_boards(board, tmp->solution))
-	return 0;
-      tmp = tmp->next;
-    }
-    if (!(n = malloc(sizeof(*n)))) {
-      return 0;
-    }
-    tmp = *head;
-    while (tmp->next)
-      tmp = tmp->next;
-    tmp-> next = n;
-    n->next = 0;
-    copy_solution(n, board);
-    return 1;
-  }
-  if (!(*head = malloc(sizeof(solution))))
-    return 0;
-  (*head)->next = 0;
-  copy_solution(*head, board);
-  return 1;
-}
+#include "print.h"
+#include "list.h"
 
 void set_queen(int nb_queen, char board[8][8], int posx, int posy) {
   int x = 0;
@@ -151,7 +70,7 @@ void unset_queen(int nb_queen, char board[8][8]) {
   }
 }
 
-int put_queen(int nb_queen, char board[8][8], int possibility, solution **s) {
+int put_queen(int nb_queen, char board[8][8], int possibility, solution **s, options *op) {
   int posy = 0;
   int posx = 0;
 
@@ -162,29 +81,32 @@ int put_queen(int nb_queen, char board[8][8], int possibility, solution **s) {
 	if (nb_queen == 8) {
 	  if (add_solution(board, s)) {
 	    possibility += 1;
-	    print_board(board, possibility);
+	    print_board(board, possibility, op);
+	    if (possibility == 92 && op->stop_before_end)
+	      op->end = 1;
 	  }
 	}
 	else
-	  possibility = put_queen(nb_queen + 1, board, possibility, s);
+	  possibility = put_queen(nb_queen + 1, board, possibility, s, op);
 	unset_queen(nb_queen, board);
+	if (op->end)
+	  return possibility;
       }
     }
   }
   return possibility;
 }
 
-int main() {
+int main(int ac, char **av) {
   char board[8][8] = {{0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}};
   int i;
   solution *s = 0;
+  options op;
 
-  printf("\nFor a total of %d possibilities\n", put_queen(1, board, 0, &s));
-  while (s) {
-    solution *tmp = s->next;
-
-    free(s);
-    s = tmp;
-  }
+  if (!check_options(ac, av, &op))
+    return 0;
+  printf("%d %d\n", op.color, op.stop_before_end);
+  printf("\nFor a total of %d possibilities\n", put_queen(1, board, 0, &s, &op));
+  clear_list(&s);
   return 0;
 }
