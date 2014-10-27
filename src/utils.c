@@ -48,6 +48,7 @@ int check_options(int ac, char **av, options *op) {
   op->end = 0;
   op->color = 0;
   op->stop_before_end = 0;
+  op->brute_force = 0;
   if (ac < 2)
     return 1;
   for (; i < ac; ++i) {
@@ -55,6 +56,7 @@ int check_options(int ac, char **av, options *op) {
       printf("eight-queens' options:\n");
       printf(" -h, --help : display this help.\n");
       printf(" -s         : stop before ends, the execution will stop when 92 possibilities will be found.\n");
+      printf(" -b         : brute-force.\n");
       printf(" -c         : activate color display.\n");
       return 0;
     } else if (av[i][0] == '-') {
@@ -63,6 +65,8 @@ int check_options(int ac, char **av, options *op) {
       for (x = 1; av[i][x]; ++x) {
 	if (av[i][x] == 'c')
 	  op->color = 1;
+  else if (av[i][x] == 'b')
+    op->brute_force = 1;
 	else if (av[i][x] == 's')
 	  op->stop_before_end = 1;
 	else {

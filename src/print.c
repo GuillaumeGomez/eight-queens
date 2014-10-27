@@ -37,31 +37,31 @@ void print_board(char board[8][8], int possibility, options *op) {
     for (i = 0; i < 8; ++i) {
       int j;
 
-      printf("%s------------------\n", colors[1]);
+      printf("%s-----------------\n", colors[1]);
       for (j = 0; j < 8; ++j) {
-	if (board[i][j] < 10) {
-	  printf("|%s%d%s", colors[0], board[i][j], colors[1]);
-	} else {
-	  printf("| ");
-	}
+        if (board[i][j] < 10) {
+          printf("|%s%d%s", colors[0], board[i][j], colors[1]);
+        } else {
+          printf("| ");
+        }
       }
       printf("|\n");
     }
-    printf("------------------%s\n", colors[2]);
+    printf("-----------------%s\n", colors[2]);
     return;
   }
   for (i = 0; i < 8; ++i) {
     int j;
 
-    printf("------------------\n");
+    printf("-----------------\n");
     for (j = 0; j < 8; ++j) {
       if (board[i][j] < 10) {
-	printf("|%d", board[i][j]);
+        printf("|%d", board[i][j]);
       } else {
-	printf("| ");
+        printf("| ");
       }
     }
     printf("|\n");
   }
-  printf("------------------\n");
+  printf("-----------------\n");
 }

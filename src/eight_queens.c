@@ -70,7 +70,7 @@ void unset_queen(int nb_queen, char board[8][8]) {
   }
 }
 
-int put_queen(int nb_queen, char board[8][8], int possibility, solution **s, options *op) {
+int put_queen_brute(int nb_queen, char board[8][8], int possibility, solution **s, options *op) {
   int posy = 0;
   int posx = 0;
 
@@ -87,11 +87,36 @@ int put_queen(int nb_queen, char board[8][8], int possibility, solution **s, opt
 	  }
 	}
 	else
-	  possibility = put_queen(nb_queen + 1, board, possibility, s, op);
+	  possibility = put_queen_brute(nb_queen + 1, board, possibility, s, op);
 	unset_queen(nb_queen, board);
 	if (op->end)
 	  return possibility;
       }
+    }
+  }
+  return possibility;
+}
+
+int put_queen(int nb_queen, char board[8][8], int possibility, solution **s, options *op) {
+  int posy = nb_queen - 1;
+  int posx = 0;
+
+  for (posx = 0; posx < 8; ++posx) {
+    if (!board[posy][posx]) {
+      set_queen(nb_queen, board, posx, posy);
+      if (nb_queen == 8) {
+        if (add_solution(board, s)) {
+          possibility += 1;
+          print_board(board, possibility, op);
+          if (possibility == 92 && op->stop_before_end)
+            op->end = 1;
+        }
+      }
+      else
+        possibility = put_queen(nb_queen + 1, board, possibility, s, op);
+      unset_queen(nb_queen, board);
+      if (op->end)
+        return possibility;
     }
   }
   return possibility;
@@ -105,8 +130,8 @@ int main(int ac, char **av) {
 
   if (!check_options(ac, av, &op))
     return 0;
-  printf("%d %d\n", op.color, op.stop_before_end);
-  printf("\nFor a total of %d possibilities\n", put_queen(1, board, 0, &s, &op));
+  printf("\nFor a total of %d possibilities\n",
+    op.brute_force ? put_queen_brute(1, board, 0, &s, &op) : put_queen(1, board, 0, &s, &op));
   clear_list(&s);
   return 0;
 }

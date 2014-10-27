@@ -27,6 +27,7 @@ typedef struct {
   int stop_before_end;
   int color;
   int end;
+  int brute_force;
 } options;
 
 int compare_boards(char board1[8][8], char board2[8][8]);
