@@ -11,6 +11,7 @@ A brute-force program on the [eight-queens problem](http://en.wikipedia.org/wiki
 The following options are available :
  * [-s]: Make the program stop when it gets 92 possibilities (which is the maximum)
  * [-c]: Activate color display
+ * [-b]: Activate brute-force
  * [-h, --help]: Display all the previous options
 
 ##Example :
