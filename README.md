@@ -23,4 +23,4 @@ The following options are available :
 > ./eight_queens -cs
 ```
 
-Since it is a brute-force, it can take some time to end its execution (even if it already have find all solutions). Use the -s option if you want to go faster.
+If you use the brute-force mode (the -b option), it can take some time to end its execution (even if it already have find all solutions). Use the -s option if you want to go faster.
